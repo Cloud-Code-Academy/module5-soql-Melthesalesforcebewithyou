@@ -415,7 +415,19 @@ public with sharing class SOQL {
      * @return An Account record with related Opportunities.
      */
     public static Account getAccountAndOpportunitiesFromAccountId(Id accountId) {
-        return null; // Replace null with the variable you used to store the result
+        Account accountWithOpp;
+        List<Account> accountList = [
+            SELECT Id, Name, (SELECT Id, Name FROM Opportunities)
+            FROM Account 
+            WHERE Id = :accountId
+        ];
+        //Check if any Account record was returned 
+        if (!accountList.isEmpty()) {
+            accountWithOpp = accountList[0];
+        } else {
+            accountWithOpp = new Account ();
+        }
+        return accountWithOpp;
     }
 
     /**
