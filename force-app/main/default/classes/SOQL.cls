@@ -170,7 +170,15 @@ public with sharing class SOQL {
      * @return A list of Opportunity records.
      */
     public static List<Opportunity> getOpportunitiesByNameKeyword(String keyword) {
-        return null; // Replace null with the variable you used to store the result
+        //List of Opp + SOQL query WHERE Name contains the keyword concantenated 
+        String keywordHolder = '%' + keyword + '%';
+        List<Opportunity> oppWithKeywordList = [
+            SELECT Name, StageName, CloseDate, AccountId
+            FROM Opportunity
+            WHERE Name LIKE :keywordHolder
+        ];
+        //return List of Opp 
+        return oppWithKeywordList; 
     }
 
     /**
