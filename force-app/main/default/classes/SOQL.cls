@@ -187,7 +187,14 @@ public with sharing class SOQL {
      * @return A list of Case records.
      */
     public static List<Case> getFilterCaseOrigins() {
-        return null; // Replace null with the variable you used to store the result
+        //SOQL query to retrieve Cases WHERE Case Origin != Web, Email, or null/blank
+        List<Case> filteredCaseList = [
+            SELECT Status, AccountId, Origin
+            FROM Case
+            WHERE Origin NOT IN('Web', 'Email') AND Origin != NULL
+        ];
+        //return List of Cases 
+        return filteredCaseList; 
     }
 
     /**
