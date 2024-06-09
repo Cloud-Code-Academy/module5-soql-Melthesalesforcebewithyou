@@ -254,10 +254,20 @@ public with sharing class SOQL {
      * @return The total revenue.
      */
     public static Decimal getTotalRevenueByStage(String stage) {
-        // Use AggregateQuery to get the total revenue
-
+        //Initialize a variable to store the total revenue 
+        Decimal totalRevenue = 0;
+        // Use AggregateQuery to get the total revenue via SOQL query SUM(Amount) filter StageName OR Amount > 10000
+        AggregateResult[] groupedResults = [
+            SELECT SUM(Amount) totalRevenue
+            FROM Opportunity
+            WHERE StageName = :stage OR Amount > 10000
+        ];
+        //Extract total revenue from the query result 
+        if (!groupedResults.isEmpty()) {
+            totalRevenue = (Decimal) groupedResults[0].get('totalRevenue');
+        }
         // Return the total revenue
-        return null; // Replace null with the variable you used to store the result
+        return totalRevenue;
     }
 
     /**
