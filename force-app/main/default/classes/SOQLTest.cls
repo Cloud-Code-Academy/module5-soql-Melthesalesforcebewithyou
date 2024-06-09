@@ -46,7 +46,7 @@ public with sharing class SOQLTest {
         insert new List<Contact>{testContact1, testContact2, testContact3};
 
         // Call the method to test
-        List<Contact> contacts = null; //Replace null with your method call from SOQL class
+        List<Contact> contacts = SOQL.getContactsByFirstName('John'); //Replace null with your method call from SOQL class
 
         // Assert that the number of contacts returned is correct
         System.assertEquals(2, contacts.size(), 'Number of contacts returned is incorrect.');
@@ -55,7 +55,8 @@ public with sharing class SOQLTest {
         Set<String> contactNames = new Set<String>{'John Doe', 'John Smith'};
         try {
             for (Contact contact : contacts) {
-                System.assert(contactNames.contains(contact.Name), 'Contact name is incorrect.');
+                String fullName = contact.FirstName + ' ' + contact.LastName;
+                System.assert(contactNames.contains(fullName), 'Contact name is incorrect.');
             }
         } catch (SObjectException ex) {
             Assert.fail('SObjectException thrown: ' + ex.getMessage());
