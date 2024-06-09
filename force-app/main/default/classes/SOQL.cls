@@ -326,7 +326,16 @@ public with sharing class SOQL {
      * @return A list of Cases
      */
     public static List<Case> getCasesWithStatus() {
-        return null; // Replace null with the variable you used to store the result
+        //SOQL query for Cases where Status = Open ORDER BY CreatedDate LIMIT 10 OFFSET 5
+        List<Case> casesWithOpenStatus = [
+            SELECT Subject, Status, CreatedDate
+            FROM Case
+            WHERE Status = 'Open'
+            ORDER BY CreatedDate
+            LIMIT 10 OFFSET 5
+        ];
+        //return List of Cases w Open Status
+        return casesWithOpenStatus; 
     }
 
     /**
