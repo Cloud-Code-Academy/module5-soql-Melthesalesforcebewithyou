@@ -106,9 +106,16 @@ public with sharing class SOQL {
      * @return The Integer count of Account records.
      * Update the corresponding test class and testGetAccountCount method to cover this method
      */
-    //[public | private ] [static] data_type method_name (input parameters) {
-    //  The body of the method
-    //}
+    public static Integer getAccountCount () {
+        //Body of method, return Count of Account records using COUNT() in SOQL query via Aggregrate Result 
+        List<AggregateResult> results = [
+        SELECT COUNT(Id) totalCount
+        FROM Account
+        ];
+        Integer countOfAccounts = (Integer) results[0].get('totalCount');
+        //Return list with summation of Account records 
+        return countOfAccounts; 
+    }
 
     /**
      * Question 6
