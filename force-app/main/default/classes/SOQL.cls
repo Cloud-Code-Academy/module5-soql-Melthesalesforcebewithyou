@@ -395,7 +395,16 @@ public with sharing class SOQL {
      * @return The Account Name of the Contact.
      */
     public static String getAccountNameForContact(String contactId) {
-        return null; // Replace null with the variable you used to store the result
+        //SOQL query for Account Name given the Contact Id
+        String accountName;
+        List <Contact> contacts = [
+            SELECT Account.Name
+            FROM Contact
+            WHERE Id = :contactId
+        ];
+        accountName = contacts[0].Account.Name;
+        //return Account Name of Contact
+        return accountName; 
     }    
 
     /**
