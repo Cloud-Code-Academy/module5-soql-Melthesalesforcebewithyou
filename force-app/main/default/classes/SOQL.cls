@@ -310,7 +310,14 @@ public with sharing class SOQL {
      * @return A list of Contacts
      */
     public static List<Contact> getBirthdateContacts() {
-        return null; // Replace null with the variable you used to store the result
+        //SOQL query for Contact with Birthdate <TODAY ORDER BY DESC LIMIT 3
+        List<Contact> contactsWithRecentBirthdates = [
+            SELECT LastName, Birthdate
+            FROM Contact
+            ORDER BY Birthdate DESC
+            LIMIT 3
+        ];
+        return contactsWithRecentBirthdates;
     }
     
     /**
