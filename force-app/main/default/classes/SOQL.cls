@@ -500,19 +500,57 @@ public with sharing class SOQL {
      */
     public static void cloneLineItems(Id origOppId, List<Id> cloneOppIds) {
         // Query the original Opportunity Line Items
-
+        List<OpportunityLineItem> originalLineItems = [
+            SELECT OpportunityId, Quantity, UnitPrice, Product2Id, PricebookEntryId
+            FROM OpportunityLineItem
+            WHERE OpportunityId = :origOppId
+        ];
+    
+        // Query the original Opportunity to get its Pricebook2Id
+        Opportunity originalOpportunity = [
+            SELECT Pricebook2Id
+            FROM Opportunity
+            WHERE Id = :origOppId
+            LIMIT 1
+        ];
+    
+        // Set the Price Book Id on the cloned Opportunities
+        List<Opportunity> cloneOpportunities = [
+            SELECT Id, Pricebook2Id
+            FROM Opportunity
+            WHERE Id IN :cloneOppIds
+        ];
+    
+        for (Opportunity cloneOpp : cloneOpportunities) {
+            cloneOpp.Pricebook2Id = originalOpportunity.Pricebook2Id;
+        }
+    
+        update cloneOpportunities;
+    
         // Create a list to hold the new line items
-
-        // Generate a random number between 1 and 3
-
+        List<OpportunityLineItem> newLineItems = new List<OpportunityLineItem>();
         // Loop through each cloned Opportunity Id
-
+        for (Id cloneOppId : cloneOppIds) {
             // Loop through each original line item
-
+            for (OpportunityLineItem originalItem : originalLineItems) {
                 // Clone the original line item and add the random number to the quantity
-
+                OpportunityLineItem newItem = new OpportunityLineItem(
+                    OpportunityId = cloneOppId,
+                    Quantity = originalItem.Quantity + Math.round(Math.random() * 2) + 1,
+                    UnitPrice = originalItem.UnitPrice,
+                    Product2Id = originalItem.Product2Id,
+                    PricebookEntryId = originalItem.PricebookEntryId
+                );
+    
+                newLineItems.add(newItem);
+            }
+        }
+    
         // Insert the new line items
+        insert newLineItems;
     }
+    
+    
     
     /**
      * Question 24
