@@ -628,7 +628,7 @@ public with sharing class SOQLTest {
         Lead testLead = leads[(Integer)Math.floor(Math.random() * leads.size())];
         String testLeadDomain = testLead.Email.split('@')[1];
         Set<Id> leadIds = new Set<Id>{testLead.Id};
-        List<Account> matchedAccounts = SOQL.findAccountsByLeadEmailDomains(leadIds);
+        List<Account> matchedAccounts = SOQL.findContactsByLeadEmailDomains(leadIds);
         System.debug([SELECT Id, Website FROM Account]);
         System.debug(testLeadDomain);
         System.debug(domainToAccount.get(testLeadDomain));

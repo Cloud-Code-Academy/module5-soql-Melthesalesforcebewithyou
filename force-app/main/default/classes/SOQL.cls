@@ -465,22 +465,29 @@ public with sharing class SOQL {
      * @param A set of Lead Ids.
      * @return A list of Accounts with matching email domains.
      */
-    public static List<Account> findAccountsByLeadEmailDomains(Set<Id> leadIds) {
+    public static List<Account> findContactsByLeadEmailDomains(Set<Id> leadIds) {
         // Query the Leads
+        List<Lead> leadsWithDomain = [SELECT Id, Email FROM Lead WHERE Id IN :leadIds];
 
         // Create a set of email domains from the Leads
+        Set<String> domainsFromLeads = new Set<String>();
 
         // Loop through each Lead
-
+        for(Lead currentLead : leadsWithDomain) {
             // Get the email from the Lead
-
+            String currentEmail = currentLead.Email;
             // Check if the email is not null
-
+            if (currentEmail != null) {
                 // Add the email domain to the set
-
-        
+                currentEmail = currentEmail.split('@').get(1);
+                String domainForAcct = 'www.' + currentEmail;
+                domainsFromLeads.add(domainForAcct);
+                
+            }
+        }
         // Query the Accounts
-        return null; // Replace null with the variable you used to store the result
+        List<Account> accountsWithDomain = [SELECT Id, Name, Website FROM Account WHERE Website IN :domainsFromLeads];
+        return accountsWithDomain; // Replace null with the variable you used to store the result
     }
 
     /**
