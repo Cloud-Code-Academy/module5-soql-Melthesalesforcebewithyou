@@ -573,18 +573,31 @@ public with sharing class SOQL {
      * Example: setPrimaryContact() should set the 'Primary_Contact__c' field for every Opportunity in the org
      */
     public static void setPrimaryContact() {
-        //Use the getOpportunityDetailsForClosedWon() method to get the Opportunities
-
+        // Use the getOpportunityDetailsForClosedWon() method to get the Opportunities
+        List<Opportunity> closedWonOpps = getOpportunityDetailsForClosedWon();
+        
         // Create a set of Account Ids from the Opportunities
-
-        // Query the Contacts
-
-        // Loop through each Contact and add the Account Id and Contact to the map
+        Set<Id> oppAccountIds = new Set<Id>();
+        for(Opportunity opp : closedWonOpps) {
+            oppAccountIds.add(opp.AccountId);
+        }
+        
+        // Query the Contacts and create a map of AccountId to Contact
+        Map<Id, Contact> accountToContactMap = new Map<Id, Contact>();
+        for(Contact con : [SELECT Id, AccountId FROM Contact WHERE AccountId IN :oppAccountIds]) {
+            accountToContactMap.put(con.AccountId, con);
+        }
         
         // Loop through each Opportunity
-
+        for(Opportunity opp : closedWonOpps) {
+            if(accountToContactMap.containsKey(opp.AccountId)) {
                 // Update the Opportunity primary contact from accountToContactMap
-
+                opp.Primary_Contact__c = accountToContactMap.get(opp.AccountId).Id;
+            }
+        }
+        
         // Update the Opportunities
+        update closedWonOpps;
     }
+    
 }
